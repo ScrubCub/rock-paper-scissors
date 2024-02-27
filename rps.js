@@ -1,3 +1,6 @@
+let playerWins = 0;
+let compWins = 0;
+
 function getComputerChoice() {
 
     let random = Math.floor(Math.random() * 3);
@@ -14,6 +17,26 @@ function getActualChoice(num) {
     } else if (num === 2) {
         return "scissors";
     }
+}
+
+function winOrLossMessage(condition, compChoice, playerChoice) {
+
+    if (condition === "loss") {
+
+        console.log(`You lose! ${compChoice} beats ${playerChoice}`);
+        compWins++;
+
+    } else if (condition === "win") {
+
+        console.log(`You won! ${playerChoice} beats ${compChoice}`);
+        playerWins++;
+
+    } else {
+
+        console.log(`It's a draw. You both chose ${playerChoice}`);
+
+    }
+
 }
 
 
@@ -33,65 +56,88 @@ function playRound(compChoice, playerChoice) {
 
     if (pRand === 2 && compChoice === 0) {
 
-        let message = `You lose! ${compActualChoice} beats ${pChoice}`;
-        console.log(message);
-        return -1;
+        winOrLossMessage('loss', compActualChoice, pChoice)
 
     } else if (pRand === 0 && compChoice === 2) {
 
-        let message = `You won! ${pChoice} beats ${compActualChoice}`;
-        console.log(message);
-        return 1;
+        winOrLossMessage('win', compActualChoice, pChoice)
+
 
     } else if (pRand == compChoice) {
 
-        let message = `It's a draw. You both chose ${pChoice}`;
-        console.log(message);
-        return 0;
+        winOrLossMessage('draw', compActualChoice, pChoice)
 
     } else if (pRand < compChoice) {
 
-        let message = `You lose! ${compActualChoice} beats ${pChoice}`;
-        console.log(message);
-        return -1;
+        winOrLossMessage('loss', compActualChoice, pChoice)
 
     } else if (pRand > compChoice) {
 
-        let message = `You won! ${pChoice} beats ${compActualChoice}`;
-        console.log(message);
-        return 1;
+        winOrLossMessage('win', compActualChoice, pChoice)
 
     }
 }
 
-function playGame() {
+function winningCondition() {
 
-    let playerWins = 0;
-    let compWins = 0;
+    if (playerWins === 5) {
+        score.textContent = "Player Wins!"
+        playerWins = 0;
+        compWins = 0;
 
-    for (let i = 0; i < 5; i++) {
+    } else if (compWins === 5) {
 
-        let playerChoice = prompt("Enter your choice: ");
-        let compChoice = getComputerChoice();
-        let whoWon = playRound(compChoice, playerChoice);
-
-        if (whoWon === 1) {
-            playerWins++;
-        } else if (whoWon === 0) {
-            playerWins++;
-            compWins++;
-        } else if (whoWon === -1) {
-            compWins++;
-        }
+        score.textContent = "Computer Wins!"
+        playerWins = 0;
+        compWins = 0;
     }
 
-    if (playerWins > compWins) {
-        console.log("Player wins!");
-    } else if (compWins > playerWins) {
-        console.log("Computer wins!");
-    } else {
-        console.log("It's a draw!");
-    }
+
 }
 
-playGame()
+let body = document.querySelector('body');
+let container = document.createElement('div');
+let displayScore = document.createElement('div');
+let score = document.createElement('p');
+let rockBtn = document.createElement('button');
+let paperBtn = document.createElement('button');
+let scissorsBtn = document.createElement('button');
+
+body.appendChild(displayScore);
+displayScore.appendChild(score);
+body.appendChild(container);
+container.appendChild(rockBtn);
+container.appendChild(paperBtn);
+container.appendChild(scissorsBtn);
+
+score.textContent = 'Pick your choice to start the game'
+rockBtn.textContent = 'Rock';
+paperBtn.textContent = "Paper";
+scissorsBtn.textContent = "Scissors";
+
+rockBtn.addEventListener('click', () => {
+
+    let compChoice = getComputerChoice();
+    playRound(compChoice, 'rock');
+    score.textContent = `Computer: ${compWins} | Player: ${playerWins}`;
+    winningCondition();
+
+
+})
+
+paperBtn.addEventListener('click', () => {
+
+    let compChoice = getComputerChoice();
+    playRound(compChoice, 'paper');
+    score.textContent = `Computer: ${compWins} | Player: ${playerWins}`;
+    winningCondition();
+})
+
+scissorsBtn.addEventListener('click', () => {
+
+    let compChoice = getComputerChoice();
+    playRound(compChoice, 'scissors');
+    score.textContent = `Computer: ${compWins} | Player: ${playerWins}`;
+    winningCondition();
+
+})
